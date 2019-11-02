@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+
+  database:
+    image: mysql:5.7
+    container_name: chat.database
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: chat
+    ports:
+      - '3306:3306'
+
+  backend:
+    build: ./backend
+    image: chat.backend
+    container_name: chat.backend
+    command: sh -c "npm install && npm run start:dev"
+    environment:
+      TZ: Europe/Madrid
+    tty: true
+    ports:
+      - '3000:3000'
+    volumes:
+      - './backend:/backend'
+      - 'node_modules_chat_backend:/backend/node_modules'
+    depends_on:
+      - database
+    links:
+      - database
+
+  frontend:
+    build: ./frontend
+    image: chat.frontend
+    container_name: chat.frontend
+    command: sh -c "npm install && npm run serve"
+    tty: true
+    ports:
+      - '8080:8080'
+    volumes:
+      - './frontend:/frontend'
+      - 'node_modules_chat_frontend:/frontend/node_modules'
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+    links:
+      - backend
+
+volumes:
+  node_modules_chat_backend:
+  node_modules_chat_frontend:

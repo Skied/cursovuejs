@@ -1,0 +1,60 @@
+<div class="room-component">
+  <div class="message-header">
+    <h5>
+
+    </h5>
+    <small>
+
+    </small>
+    <small>
+
+    </small>
+  </div>
+  <div class="msg_history" ref="messageRoomList">
+
+      <!-- Mensaje enviado por otro usuario -->
+      <div class="incoming_msg">
+        <div class="incoming_msg_img">
+          <img alt="sunil" src="https://ptetutorials.com/images/user-profile.png">
+        </div>
+        <div class="received_msg">
+          <div class="received_withd_msg">
+            <div title="Send message" class="username">
+
+            </div>
+            <p>
+
+            </p>
+            <span class="time_date">
+
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- Mensaje enviado por el usuario logueado -->
+      <div class="outgoing_msg">
+        <div class="sent_msg">
+          <p>
+
+          </p>
+          <span class="time_date">
+
+          </span>
+        </div>
+      </div>
+
+
+  </div>
+  <div class="type_msg">
+    <div class="input-group">
+      <input placeholder="Write a message here..." class="form-control" ref="inputText" type="text">
+      <div class="input-group-append">
+        <button title="Send"
+                class="btn btn-primary"
+                type="button">
+          <font-awesome-icon icon="paper-plane"></font-awesome-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,106 @@
+<div class="rooms-component">
+  <div class="row h-100">
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-sm-6">
+          <h3>
+            Rooms
+          </h3>
+        </div>
+        <div class="col-sm-6">
+          <button title="New room" class="btn btn-sm btn-warning float-right">
+            <font-awesome-icon icon="plus"></font-awesome-icon>
+          </button>
+        </div>
+      </div>
+      <table class="table table-hover">
+        <thead>
+        <tr class="table-active">
+          <td class="text-left">#</td>
+          <td class="text-left">Name</td>
+          <td class="text-left">Users</td>
+          <td class="text-right">Actions</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class="text-center" colspan="5">
+            No rooms available
+          </td>
+        </tr>
+
+
+          <tr>
+            <td class="text-left">
+
+            </td>
+            <td class="text-left">
+
+            </td>
+            <td class="text-left">
+
+            </td>
+            <td class="text-right">
+              <button title="Access the room" class="btn btn-sm btn-success">
+                <font-awesome-icon icon="comments"></font-awesome-icon>
+              </button>
+              <button title="Edit room" class="btn btn-sm btn-info">
+                <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
+              </button>
+              <button title="Delete room" class="btn btn-sm btn-danger">
+                <font-awesome-icon icon="trash"></font-awesome-icon>
+              </button>
+            </td>
+          </tr>
+
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <b-modal title="New room / Edit room" hide-footer ref="modalRoom">
+    <div class="d-block text-center">
+
+
+          <div class="form-group">
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <font-awesome-icon icon="signature"></font-awesome-icon>
+                </div>
+              </div>
+              <input placeholder="Name" class="form-control" type="text">
+            </div>
+            <span class="text-danger"></span>
+          </div>
+
+
+        <div class="float-right">
+          <b-button class="mt-3 mr-1" variant="secondary">
+            Cancel
+          </b-button>
+          <b-button class="mt-3 ml-1" variant="success">
+            Create / Update
+          </b-button>
+        </div>
+
+
+    </div>
+  </b-modal>
+
+  <b-modal title="Delete room" hide-footer ref="deleteModalRoom">
+    <div class="d-block text-center">
+      <p>Are you sure you want delete room?</p>
+    </div>
+    <div class="float-right">
+      <b-button class="mt-3 mr-1" variant="secondary">
+        Cancel
+      </b-button>
+      <b-button class="mt-3 ml-1" variant="danger">
+        Delete
+      </b-button>
+    </div>
+  </b-modal>
+
+</div>
