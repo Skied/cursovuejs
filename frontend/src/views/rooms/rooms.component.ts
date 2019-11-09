@@ -1,6 +1,8 @@
 import {Component, Vue} from 'vue-property-decorator';
 import {ValidationObserver} from 'vee-validate';
 import {Room} from '@/classes/room';
+import {roomsService} from '@/services/room.service';
+import {AxiosResponse} from 'axios';
 
 @Component({
   components: {
@@ -14,14 +16,13 @@ export default class RoomsComponent extends Vue {
   public operationRoom: string = '';
 
   created() {
-    const room1: Room = new Room();
-    room1.id = 1;
-    room1.name = 'Actualidad';
-    this.rooms.push(room1);
-    const room2: Room = new Room();
-    room2.id = 2;
-    room2.name = 'Política';
-    this.rooms.push(room2);
+    roomsService.getRooms().then((axiosResponse: AxiosResponse<Room[]>) => {
+      if (axiosResponse.status == 200) {
+        this.rooms = axiosResponse.data;
+      } else {
+        this.rooms = [];
+      }
+    });
   }
 
   public accessTheRoom(room: Room): void {
@@ -61,28 +62,43 @@ export default class RoomsComponent extends Vue {
   }
 
   public deleteRoom(): void {
-    const index: number = this.rooms.findIndex((tmpRoom: Room) => {
-      return tmpRoom.id === this.selectedRoom.id;
+    roomsService.deleteRoom(this.selectedRoom).then((response: AxiosResponse<Room>) => {
+      if (response.status == 200) {
+        const roomResponse: Room = response.data;
+        const index: number = this.rooms.findIndex((tmpRoom: Room) => {
+          return tmpRoom.id === roomResponse.id;
+        });
+        if (index > -1) {
+          this.rooms.splice(index, 1);
+        }
+      }
+      this.hideDeleteRoomModal();
     });
-    if (index > -1) {
-      this.rooms.splice(index, 1);
-    }
-    this.hideDeleteRoomModal();
   }
 
   private createRoom(): void {
-    this.rooms.push(this.selectedRoom);
-    this.hideRoomModal();
+    roomsService.createRoom(this.selectedRoom).then((response: AxiosResponse<Room>) => {
+      if (response.status == 201) {
+        const roomResponse: Room = response.data;
+        this.rooms.push(roomResponse);
+      }
+      this.hideRoomModal();
+    });
   }
 
   private editRoom(): void {
-    const index: number = this.rooms.findIndex((tmpRoom: Room) => {
-      return tmpRoom.id === this.selectedRoom.id;
+    roomsService.updateRoom(this.selectedRoom).then((response: AxiosResponse<Room>) => {
+      if (response.status == 200) {
+        const roomResponse: Room = response.data;
+        const index: number = this.rooms.findIndex((tmpRoom: Room) => {
+          return tmpRoom.id === roomResponse.id;
+        });
+        if (index > -1) {
+          Vue.set(this.rooms, index, roomResponse);
+        }
+      }
+      this.hideRoomModal();
     });
-    if (index > -1) {
-      Vue.set(this.rooms, index, this.selectedRoom);
-    }
-    this.hideRoomModal();
   }
 
 }

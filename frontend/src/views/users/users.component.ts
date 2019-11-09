@@ -45,7 +45,7 @@ export default class UsersComponent extends Vue {
           return tmpUser.id === userResponse.id;
         });
         if (index > -1) {
-          Vue.set(this.users, index, this.selectedUser);
+          Vue.set(this.users, index, userResponse);
         }
       }
       this.selectedUser = new User();
