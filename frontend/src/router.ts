@@ -12,6 +12,16 @@ export default new Router({
       path: '/',
       name: 'home',
       component: HomeComponent,
+      redirect: '/users',
+      beforeEnter: (to: any, from: any, next: any) => {
+        const token: string | null = localStorage.getItem('token');
+        if (token == null) {
+          next('/login');
+          return;
+        } else {
+          next();
+        }
+      },
       children: [
         {
           path: 'users',
@@ -28,11 +38,29 @@ export default new Router({
     {
       path: '/register',
       name: 'register',
+      beforeEnter: (to: any, from: any, next: any) => {
+        const token: string | null = localStorage.getItem('token');
+        if (token != null) {
+          next('/');
+          return;
+        } else {
+          next();
+        }
+      },
       component: () => import('./views/register/register.component.vue'),
     },
     {
       path: '/login',
       name: 'login',
+      beforeEnter: (to: any, from: any, next: any) => {
+        const token: string | null = localStorage.getItem('token');
+        if (token != null) {
+          next('/');
+          return;
+        } else {
+          next();
+        }
+      },
       component: () => import('./views/login/login.component.vue'),
     },
     {
