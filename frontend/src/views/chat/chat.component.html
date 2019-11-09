@@ -11,18 +11,18 @@
     </small>
   </div>
   <div class="msg_history" ref="messageList">
-
-      <div class="incoming_msg">
+    <template v-for="message in messages">
+      <div class="incoming_msg" v-if="isIncomingMessage(message)">
         <div class="incoming_msg_img">
           <img alt="sunil" src="https://ptetutorials.com/images/user-profile.png">
         </div>
         <div class="received_msg">
           <div class="received_withd_msg">
             <p>
-
+              {{ message.text }}
             </p>
             <span class="time_date">
-
+              {{ message.date | moment('HH:mm A | MMMM D') }}
             </span>
           </div>
         </div>
@@ -30,24 +30,24 @@
       <div class="outgoing_msg">
         <div class="sent_msg">
           <p>
-
+            {{ message.text }}
           </p>
           <span class="time_date">
-
+            {{ message.date | moment('HH:mm A | MMMM D') }}
             <span class="fa-pull-right">
-              <font-awesome-icon color="#007bff" icon="check-double"></font-awesome-icon>
-              <font-awesome-icon icon="check"></font-awesome-icon>
+              <font-awesome-icon :color="message.markedAsRead ? '#007bff' : ''"
+                                 :icon="message.markedAsRead ? 'check-double'  : 'check'"></font-awesome-icon>
             </span>
           </span>
         </div>
       </div>
-
+    </template>
   </div>
   <div class="type_msg">
     <div class="input-group">
-      <input class="form-control" ref="inputText" type="text">
+      <input class="form-control" ref="inputText" type="text" v-model="newUserMessage.text">
       <div class="input-group-append">
-        <button class="btn btn-primary" type="button">
+        <button :disabled="isSendMessageButtonDisabled" @click="sendMessage()" class="btn btn-primary" type="button">
           <font-awesome-icon icon="paper-plane"></font-awesome-icon>
         </button>
       </div>

@@ -29,6 +29,12 @@ export default new Router({
           component: () => import('./views/users/users.component.vue'),
         },
         {
+          path: 'chat/:idFriend',
+          name: 'chat',
+          props: true,
+          component: () => import('./views/chat/chat.component.vue'),
+        },
+        {
           path: 'rooms',
           name: 'rooms',
           component: () => import('./views/rooms/rooms.component.vue'),

@@ -1,5 +1,9 @@
-import {Component, Ref, Vue} from 'vue-property-decorator';
+import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
 import {UserMessage} from '@/classes/user-message';
+import {userMessagesService} from '@/services/user-messages.service';
+import {AxiosResponse} from 'axios';
+import {User} from '@/classes/user';
+import jwt_decode from 'jwt-decode';
 
 @Component
 export default class ChatComponent extends Vue {
@@ -9,11 +13,20 @@ export default class ChatComponent extends Vue {
   public newUserMessage: UserMessage = new UserMessage();
   public userIsTyping: boolean = false;
   private typingTimeout: number = -1;
+  public messages: UserMessage[] = [];
+  @Prop(String) readonly idFriend!: string;
+  public currentUser!: User;
 
+  get isSendMessageButtonDisabled(): boolean {
+    return this.newUserMessage.text == null || this.newUserMessage.text === '';
+  }
 
   created() {
-
-
+    this.currentUser = jwt_decode(localStorage.getItem('token')!);
+    const id: number = parseInt(this.idFriend, 10);
+    userMessagesService.getUserMessages(id).then((response: AxiosResponse<UserMessage[]>) => {
+      this.messages = response.data;
+    });
   }
 
   mounted() {
@@ -43,9 +56,11 @@ export default class ChatComponent extends Vue {
   }
 
   public sendMessage(): void {
-
+    this.newUserMessage.idSender = this.currentUser.id;
+    this.newUserMessage.idReceiver = parseInt(this.idFriend, 10);
+    userMessagesService.sendUserMessage(this.newUserMessage);
+    this.newUserMessage.text = null;
   }
-
 
   private scrollBottomMessageList(): void {
     this.$nextTick(() => {
@@ -53,6 +68,10 @@ export default class ChatComponent extends Vue {
         this.messageList.scrollTop = this.messageList.scrollHeight;
       }
     });
+  }
+
+  public isIncomingMessage(message: UserMessage): boolean {
+    return this.currentUser.id !== message.idSender;
   }
 
 }
