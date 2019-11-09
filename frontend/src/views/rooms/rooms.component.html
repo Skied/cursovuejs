@@ -8,7 +8,7 @@
           </h3>
         </div>
         <div class="col-sm-6">
-          <button title="New room" class="btn btn-sm btn-warning float-right">
+          <button title="New room" @click="showRoomModal()" class="btn btn-sm btn-warning float-right">
             <font-awesome-icon icon="plus"></font-awesome-icon>
           </button>
         </div>
@@ -23,46 +23,42 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
+        <tr v-if="rooms.length === 0">
           <td class="text-center" colspan="5">
             No rooms available
           </td>
         </tr>
-
-
-          <tr>
-            <td class="text-left">
-
-            </td>
-            <td class="text-left">
-
-            </td>
-            <td class="text-left">
-
-            </td>
-            <td class="text-right">
-              <button title="Access the room" class="btn btn-sm btn-success">
-                <font-awesome-icon icon="comments"></font-awesome-icon>
-              </button>
-              <button title="Edit room" class="btn btn-sm btn-info">
-                <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-              </button>
-              <button title="Delete room" class="btn btn-sm btn-danger">
-                <font-awesome-icon icon="trash"></font-awesome-icon>
-              </button>
-            </td>
-          </tr>
-
-
+        <tr v-else v-for="room in rooms">
+          <td class="text-left">
+            {{ room.id }}
+          </td>
+          <td class="text-left">
+            {{ room.name }}
+          </td>
+          <td class="text-left">
+            0
+          </td>
+          <td class="text-right">
+            <button title="Access the room" @click="accessTheRoom(room)" class="btn btn-sm btn-success">
+              <font-awesome-icon icon="comments"></font-awesome-icon>
+            </button>
+            <button title="Edit room" @click="showRoomModal(room)" class="btn btn-sm btn-info">
+              <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
+            </button>
+            <button title="Delete room" @click="showDeleteRoomModal(room)" class="btn btn-sm btn-danger">
+              <font-awesome-icon icon="trash"></font-awesome-icon>
+            </button>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <b-modal title="New room / Edit room" hide-footer ref="modalRoom">
+  <b-modal :title="operationRoom === 'create' ? 'New room' : 'Edit room'" hide-footer ref="modalRoom">
     <div class="d-block text-center">
-
-
+      <ValidationObserver @submit.prevent="submit()" ref="editRoomForm" tag="form" v-slot="{ invalid }">
+        <ValidationProvider :rules="{required: true}" name="Name" v-slot="{ errors }">
           <div class="form-group">
             <div class="input-group mb-2">
               <div class="input-group-prepend">
@@ -70,22 +66,22 @@
                   <font-awesome-icon icon="signature"></font-awesome-icon>
                 </div>
               </div>
-              <input placeholder="Name" class="form-control" type="text">
+              <input placeholder="Name" class="form-control" type="text" v-model="selectedRoom.name">
             </div>
-            <span class="text-danger"></span>
+            <span class="text-danger" v-for="error in errors">
+              {{ error }}
+            </span>
           </div>
-
-
+        </ValidationProvider>
         <div class="float-right">
-          <b-button class="mt-3 mr-1" variant="secondary">
+          <b-button @click="hideRoomModal()" class="mt-3 mr-1" variant="secondary">
             Cancel
           </b-button>
-          <b-button class="mt-3 ml-1" variant="success">
-            Create / Update
+          <b-button :disabled="invalid" @click="runOperationRoom()" class="mt-3 ml-1" variant="success">
+            {{ operationRoom === 'create' ? 'Create' : 'Update' }}
           </b-button>
         </div>
-
-
+      </ValidationObserver>
     </div>
   </b-modal>
 
@@ -94,10 +90,10 @@
       <p>Are you sure you want delete room?</p>
     </div>
     <div class="float-right">
-      <b-button class="mt-3 mr-1" variant="secondary">
+      <b-button @click="hideDeleteRoomModal()" class="mt-3 mr-1" variant="secondary">
         Cancel
       </b-button>
-      <b-button class="mt-3 ml-1" variant="danger">
+      <b-button @click="deleteRoom()" class="mt-3 ml-1" variant="danger">
         Delete
       </b-button>
     </div>

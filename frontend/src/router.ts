@@ -18,6 +18,11 @@ export default new Router({
           name: 'users',
           component: () => import('./views/users/users.component.vue'),
         },
+        {
+          path: 'rooms',
+          name: 'rooms',
+          component: () => import('./views/rooms/rooms.component.vue'),
+        },
       ],
     },
     {
