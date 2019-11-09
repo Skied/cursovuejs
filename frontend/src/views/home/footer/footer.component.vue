@@ -1,7 +1,7 @@
 <template>
   <footer class="bd-footer text-muted docs-border">
     <span>
-      Chat <strong>v</strong>
+      Chat <strong>v{{ version }}</strong>
     </span>
   </footer>
 </template>
@@ -11,6 +11,11 @@
 
   @Component
   export default class FooterComponent extends Vue {
+
+    get version() {
+      return process.env.VUE_APP_VERSION;
+    }
+
   }
 </script>
 
