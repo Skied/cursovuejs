@@ -3,8 +3,8 @@
     <div class="row h-100 justify-content-center align-items-center">
       <form class="col-4">
         <h1 class="h3 mb-3 font-weight-normal">Chat</h1>
-
-
+        <ValidationObserver @submit.prevent="submit()" ref="loginForm" tag="form" v-slot="{ invalid }">
+          <ValidationProvider :rules="{required: true, min: 3, max: 20}" name="Username" v-slot="{ errors }">
             <div class="form-group">
               <div class="input-group mb-2">
                 <div class="input-group-prepend">
@@ -12,14 +12,14 @@
                     <font-awesome-icon icon="user"></font-awesome-icon>
                   </div>
                 </div>
-                <input placeholder="Username" class="form-control" type="text">
+                <input placeholder="Username" class="form-control" type="text" v-model="loginDto.username">
               </div>
-              <span class="text-danger">
-
+              <span class="text-danger" v-for="error in errors" :key="error">
+                {{ error }}
               </span>
             </div>
-
-
+          </ValidationProvider>
+          <ValidationProvider :rules="{required: true, min: 3, max: 20}" name="Password" v-slot="{ errors }">
             <div class="form-group">
               <div class="input-group mb-2">
                 <div class="input-group-prepend">
@@ -27,15 +27,15 @@
                     <font-awesome-icon icon="key"></font-awesome-icon>
                   </div>
                 </div>
-                <input placeholder="Password" class="form-control" data-vv-name="password" type="password">
+                <input placeholder="Password" class="form-control" data-vv-name="password" type="password"
+                       v-model="loginDto.password">
               </div>
-              <span class="text-danger">
-
+              <span class="text-danger" v-for="error in errors" :key="error">
+                {{ error }}
               </span>
             </div>
-
-
-          <button class="btn btn-primary btn-block">
+          </ValidationProvider>
+          <button :disabled="invalid" class="btn btn-primary btn-block">
             Login
           </button>
           <div class="mt-2 mb-2">
@@ -44,11 +44,12 @@
             </small>
           </div>
           <div class="mt-2 mb-4">
+            <router-link to="/register">
               Register
+            </router-link>
           </div>
           <p class="mt-2 mb-2 text-muted">© 2019-2020</p>
-
-
+        </ValidationObserver>
       </form>
     </div>
   </div>
