@@ -11,9 +11,9 @@
     </small>
   </div>
   <div class="msg_history" ref="messageRoomList">
-
+    <template v-for="message in messages">
       <!-- Mensaje enviado por otro usuario -->
-      <div class="incoming_msg">
+      <div class="incoming_msg" v-if="isIncomingMessage(message)">
         <div class="incoming_msg_img">
           <img alt="sunil" src="https://ptetutorials.com/images/user-profile.png">
         </div>
@@ -23,31 +23,30 @@
 
             </div>
             <p>
-
+              {{ message.text }}
             </p>
             <span class="time_date">
-
+              {{ message.date | moment('HH:mm A | MMMM D') }}
             </span>
           </div>
         </div>
       </div>
       <!-- Mensaje enviado por el usuario logueado -->
-      <div class="outgoing_msg">
+      <div v-else class="outgoing_msg">
         <div class="sent_msg">
           <p>
-
+            {{ message.text }}
           </p>
           <span class="time_date">
-
+            {{ message.date | moment('HH:mm A | MMMM D') }}
           </span>
         </div>
       </div>
-
-
+    </template>
   </div>
   <div class="type_msg">
     <div class="input-group">
-      <input placeholder="Write a message here..." class="form-control" ref="inputText" type="text">
+      <input placeholder="Write a message here..." class="form-control" ref="inputText" type="text" v-model="newRoomMessage.text">
       <div class="input-group-append">
         <button title="Send"
                 class="btn btn-primary"

@@ -39,6 +39,12 @@ export default new Router({
           name: 'rooms',
           component: () => import('./views/rooms/rooms.component.vue'),
         },
+        {
+          path: 'room/:idRoom',
+          name: 'room',
+          props: true,
+          component: () => import('./views/room/room.component.vue'),
+        },
       ],
     },
     {
