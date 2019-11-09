@@ -1,13 +1,14 @@
 import {AxiosResponse} from 'axios';
 import {RoomMessage} from '@/classes/room-message';
 import {UserInRoomTypingData, UserRoomData} from '@/interfaces/socket-data.interface';
+import {HttpClient} from '@/services/http-client.service';
 
 class RoomMessagesService {
 
   private readonly baseEndPoint: string = '/room-messages';
 
-  // @ts-ignore
   public getRoomMessages(idRoom: number): Promise<AxiosResponse<RoomMessage[]>> {
+    return HttpClient.get<RoomMessage[]>(this.baseEndPoint + `/${idRoom}`);
   }
 
   public joinRoom(userRoomData: UserRoomData): void {
