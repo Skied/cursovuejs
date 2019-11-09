@@ -1,7 +1,8 @@
 import {Component, Vue} from 'vue-property-decorator';
 import {ValidationObserver} from 'vee-validate';
 import {User} from '@/classes/user';
-import {RoleEnum} from '@/enums/role.enum';
+import {usersService} from '@/services/users.service';
+import {AxiosResponse} from 'axios';
 
 @Component({
   components: {
@@ -14,20 +15,13 @@ export default class UsersComponent extends Vue {
   public users: User[] = [];
 
   created() {
-    const user1: User = new User();
-    user1.id = 1;
-    user1.name = 'User1';
-    user1.role = RoleEnum.User;
-    user1.email = 'user1@iti.es';
-    user1.username = 'user1';
-    this.users.push(user1);
-    const user2: User = new User();
-    user2.id = 2;
-    user2.name = 'User2';
-    user2.role = RoleEnum.User;
-    user2.email = 'user2@iti.es';
-    user2.username = 'user2';
-    this.users.push(user2);
+    usersService.getUsers().then((axiosResponse: AxiosResponse<User[]>) => {
+      if (axiosResponse.status == 200) {
+        this.users = axiosResponse.data;
+      } else {
+        this.users = [];
+      }
+    });
   }
 
   public sendMessage(user: User): void {
@@ -44,14 +38,19 @@ export default class UsersComponent extends Vue {
   }
 
   public editUser(): void {
-    const index: number = this.users.findIndex((tmpUser: User) => {
-      return tmpUser.id === this.selectedUser.id;
+    usersService.updateUser(this.selectedUser).then((response: AxiosResponse<User>) => {
+      if (response.status == 200) {
+        const userResponse: User = response.data;
+        const index: number = this.users.findIndex((tmpUser: User) => {
+          return tmpUser.id === userResponse.id;
+        });
+        if (index > -1) {
+          Vue.set(this.users, index, this.selectedUser);
+        }
+      }
+      this.selectedUser = new User();
+      this.hideEditUserModal();
     });
-    if (index > -1) {
-      Vue.set(this.users, index, this.selectedUser);
-    }
-    this.selectedUser = new User();
-    this.hideEditUserModal();
   }
 
   public showDeleteUserModal(user: User): void {
@@ -64,14 +63,19 @@ export default class UsersComponent extends Vue {
   }
 
   public deleteUser(): void {
-    const index: number = this.users.findIndex((tmpUser: User) => {
-      return tmpUser.id === this.selectedUser.id;
+    usersService.deleteUser(this.selectedUser).then((response: AxiosResponse<User>) => {
+      if (response.status == 200) {
+        const userResponse: User = response.data;
+        const index: number = this.users.findIndex((tmpUser: User) => {
+          return tmpUser.id === userResponse.id;
+        });
+        if (index > -1) {
+          this.users.splice(index, 1);
+        }
+      }
+      this.selectedUser = new User();
+      this.hideDeleteUserModal();
     });
-    if (index > -1) {
-      this.users.splice(index, 1);
-    }
-    this.selectedUser = new User();
-    this.hideDeleteUserModal();
   }
 
 }
