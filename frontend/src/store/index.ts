@@ -4,6 +4,7 @@ import {RootState} from '@/store/types';
 import {usersModule} from '@/store/modules/users/store';
 import {RoleEnum} from '@/enums/role.enum';
 import {User} from '@/classes/user';
+import {userMessagesModule} from '@/store/modules/user-messages/store';
 
 Vue.use(Vuex);
 
@@ -23,6 +24,7 @@ export default new Vuex.Store<RootState>({
   },
   actions: {},
   modules: {
+    userMessagesModule,
     usersModule,
   },
 });
