@@ -11,8 +11,8 @@
             </b-dropdown-item>
           </b-nav-item-dropdown>
           <b-nav-item-dropdown right>
-            <template v-slot:button-content>
-              Username
+            <template v-if="currentUser != null" v-slot:button-content>
+              {{ currentUser.name }}
             </template>
             <b-dropdown-item>
               Logout
@@ -25,10 +25,14 @@
 </template>
 
 <script lang="ts">
-  import {Component, Vue} from 'vue-property-decorator';
+  import {Component, Vue} from "vue-property-decorator";
+  import {User} from "@/classes/user";
+  import {State} from "vuex-class";
 
   @Component
   export default class HeaderComponent extends Vue {
+
+    @State("user") currentUser!: User;
 
   }
 </script>

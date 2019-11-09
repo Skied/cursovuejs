@@ -1,9 +1,12 @@
 import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
 import {UserMessage} from '@/classes/user-message';
 import {userMessagesService} from '@/services/user-messages.service';
-import {AxiosResponse} from 'axios';
 import {User} from '@/classes/user';
 import jwt_decode from 'jwt-decode';
+import {namespace, State} from 'vuex-class';
+
+const usersModule = namespace('usersModule');
+const userMessagesModule = namespace('userMessagesModule');
 
 @Component
 export default class ChatComponent extends Vue {
@@ -13,9 +16,11 @@ export default class ChatComponent extends Vue {
   public newUserMessage: UserMessage = new UserMessage();
   public userIsTyping: boolean = false;
   private typingTimeout: number = -1;
-  public messages: UserMessage[] = [];
+  @userMessagesModule.State('messages') private messages!: UserMessage[];
   @Prop(String) readonly idFriend!: string;
-  public currentUser!: User;
+  @State('user') currentUser!: User;
+  @userMessagesModule.Action('getMessages') private getMessages!: (idFriend: number) => void;
+  @usersModule.Getter('getUserById') getUserById!: (idUser: number) => User;
 
   get isSendMessageButtonDisabled(): boolean {
     return this.newUserMessage.text == null || this.newUserMessage.text === '';
@@ -24,9 +29,7 @@ export default class ChatComponent extends Vue {
   created() {
     this.currentUser = jwt_decode(localStorage.getItem('token')!);
     const id: number = parseInt(this.idFriend, 10);
-    userMessagesService.getUserMessages(id).then((response: AxiosResponse<UserMessage[]>) => {
-      this.messages = response.data;
-    });
+    this.getMessages(id);
   }
 
   mounted() {

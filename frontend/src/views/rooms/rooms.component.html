@@ -36,16 +36,18 @@
             {{ room.name }}
           </td>
           <td class="text-left">
-            0
+            {{ getUsersInRoom(room.id).length }}
           </td>
           <td class="text-right">
             <button title="Access the room" @click="accessTheRoom(room)" class="btn btn-sm btn-success">
               <font-awesome-icon icon="comments"></font-awesome-icon>
             </button>
-            <button title="Edit room" @click="showRoomModal(room)" class="btn btn-sm btn-info">
+            <button title="Edit room" @click="showRoomModal(room)" class="btn btn-sm btn-info"
+                    v-if="userIsAdmin">
               <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
             </button>
-            <button title="Delete room" @click="showDeleteRoomModal(room)" class="btn btn-sm btn-danger">
+            <button title="Delete room" @click="showDeleteRoomModal(room)" class="btn btn-sm btn-danger"
+                    v-if="userIsAdmin">
               <font-awesome-icon icon="trash"></font-awesome-icon>
             </button>
           </td>

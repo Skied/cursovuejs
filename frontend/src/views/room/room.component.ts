@@ -4,6 +4,11 @@ import {roomMessagesService} from '@/services/room-messages.service';
 import {AxiosResponse} from 'axios';
 import jwt_decode from 'jwt-decode';
 import {User} from '@/classes/user';
+import {namespace} from 'vuex-class';
+import {Room} from '@/classes/room';
+
+const usersModule = namespace('usersModule');
+const roomsModule = namespace('roomsModule');
 
 @Component({})
 export default class RoomComponent extends Vue {
@@ -15,9 +20,33 @@ export default class RoomComponent extends Vue {
   public messages: RoomMessage[] = [];
   public currentUser!: User;
   @Prop(String) readonly idRoom!: string;
+  @usersModule.Getter('getUserById') getUserById!: (idUser: number) => User;
+  @roomsModule.Getter('getRoomById') getRoomById!: (idRoom: number) => Room;
+  @roomsModule.Getter('getUsersInRoom') getUsersInRoom!: (idRoom: number) => number[];
+
+  get room(): Room {
+    const id: number = parseInt(this.idRoom, 10);
+    return this.getRoomById(id);
+  }
 
   get isSendMessageButtonDisabled(): boolean {
     return this.newRoomMessage.text == null || this.newRoomMessage.text === '';
+  }
+
+  get users(): string {
+    const id: number = parseInt(this.idRoom, 10);
+    const usernames: string[] = this.getUsersInRoom(id).filter((idUser: number) => {
+      return idUser !== this.currentUser.id;
+    }).map((idUser: number) => {
+      return this.getUserById(idUser).name!;
+    });
+    if (usernames.length === 0) {
+      return 'You';
+    } else if (usernames.length === 1) {
+      return usernames[0] + ', You';
+    } else {
+      return usernames.join(', ') + ', You';
+    }
   }
 
   created() {
@@ -64,6 +93,10 @@ export default class RoomComponent extends Vue {
 
   public isIncomingMessage(message: RoomMessage): boolean {
     return this.currentUser.id !== message.idUser;
+  }
+
+  public sendUserMessage(idUser: number): void {
+    this.$router.push(`/chat/${idUser}`);
   }
 
   private scrollBottomMessageList(): void {

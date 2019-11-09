@@ -43,13 +43,16 @@
             {{ user.email }}
           </td>
           <td class="text-right">
-            <button title="Send message" @click="sendMessage(user)" class="btn btn-sm btn-success">
+            <button title="Send message" @click="sendMessage(user)" class="btn btn-sm btn-success"
+                    v-if="!itsMe(user)">
               <font-awesome-icon icon="comment"></font-awesome-icon>
             </button>
-            <button title="Edit user" @click="showEditUserModal(user)" class="btn btn-sm btn-info">
+            <button title="Edit user" @click="showEditUserModal(user)" class="btn btn-sm btn-info"
+                    v-if="userIsAdmin">
               <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
             </button>
-            <button title="Delete user" @click="showDeleteUserModal(user)" class="btn btn-sm btn-danger">
+            <button title="Delete user" @click="showDeleteUserModal(user)" class="btn btn-sm btn-danger"
+                    v-if="userIsAdmin">
               <font-awesome-icon icon="trash"></font-awesome-icon>
             </button>
           </td>

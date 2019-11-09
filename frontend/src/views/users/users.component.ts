@@ -1,8 +1,9 @@
 import {Component, Vue} from 'vue-property-decorator';
 import {ValidationObserver} from 'vee-validate';
 import {User} from '@/classes/user';
-import {usersService} from '@/services/users.service';
-import {AxiosResponse} from 'axios';
+import {Getter, namespace, State} from 'vuex-class';
+
+const usersModule = namespace('usersModule');
 
 @Component({
   components: {
@@ -12,16 +13,14 @@ import {AxiosResponse} from 'axios';
 export default class UsersComponent extends Vue {
 
   public selectedUser: User = new User();
-  public users: User[] = [];
+  @usersModule.Getter('getUsers') private users!: () => User[];
+  @State('user') public currentUser!: User;
+  @Getter('userIsAdmin') public userIsAdmin!: () => boolean;
+  @usersModule.Action('updateUser') private updateUserStore!: (user: User) => Promise<User>;
+  @usersModule.Action('deleteUser') private deleteUserStore!: (user: User) => Promise<User>;
 
-  created() {
-    usersService.getUsers().then((axiosResponse: AxiosResponse<User[]>) => {
-      if (axiosResponse.status == 200) {
-        this.users = axiosResponse.data;
-      } else {
-        this.users = [];
-      }
-    });
+  public itsMe(user: User) {
+    return this.currentUser.id === user.id;
   }
 
   public sendMessage(user: User): void {
@@ -38,18 +37,9 @@ export default class UsersComponent extends Vue {
   }
 
   public editUser(): void {
-    usersService.updateUser(this.selectedUser).then((response: AxiosResponse<User>) => {
-      if (response.status == 200) {
-        const userResponse: User = response.data;
-        const index: number = this.users.findIndex((tmpUser: User) => {
-          return tmpUser.id === userResponse.id;
-        });
-        if (index > -1) {
-          Vue.set(this.users, index, userResponse);
-        }
-      }
-      this.selectedUser = new User();
+    this.updateUserStore(this.selectedUser).then((user: User) => {
       this.hideEditUserModal();
+      this.selectedUser = new User();
     });
   }
 
@@ -63,18 +53,9 @@ export default class UsersComponent extends Vue {
   }
 
   public deleteUser(): void {
-    usersService.deleteUser(this.selectedUser).then((response: AxiosResponse<User>) => {
-      if (response.status == 200) {
-        const userResponse: User = response.data;
-        const index: number = this.users.findIndex((tmpUser: User) => {
-          return tmpUser.id === userResponse.id;
-        });
-        if (index > -1) {
-          this.users.splice(index, 1);
-        }
-      }
-      this.selectedUser = new User();
+    this.deleteUserStore(this.selectedUser).then((user: User) => {
       this.hideDeleteUserModal();
+      this.selectedUser = new User();
     });
   }
 

@@ -1,10 +1,10 @@
 <div class="room-component">
   <div class="message-header">
-    <h5>
-
+    <h5 v-if="room != null">
+      {{ room.name }}
     </h5>
     <small>
-
+      {{ users }}
     </small>
     <small>
 
@@ -19,8 +19,8 @@
         </div>
         <div class="received_msg">
           <div class="received_withd_msg">
-            <div title="Send message" class="username">
-
+            <div @click="sendUserMessage(message.idUser)" title="Send message" class="username">
+              @{{ getUserById(message.idUser).username }}
             </div>
             <p>
               {{ message.text }}
@@ -46,9 +46,10 @@
   </div>
   <div class="type_msg">
     <div class="input-group">
-      <input placeholder="Write a message here..." class="form-control" ref="inputText" type="text" v-model="newRoomMessage.text">
+      <input placeholder="Write a message here..." class="form-control" ref="inputText" type="text"
+             v-model="newRoomMessage.text">
       <div class="input-group-append">
-        <button title="Send"
+        <button :disabled="isSendMessageButtonDisabled" @click="sendMessage()" title="Send"
                 class="btn btn-primary"
                 type="button">
           <font-awesome-icon icon="paper-plane"></font-awesome-icon>
