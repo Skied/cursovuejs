@@ -5,12 +5,16 @@ import {User} from '@/classes/user';
 
 export const getters: GetterTree<UsersState, RootState> = {
   getUsers: (state: UsersState): User[] => {
-    return [];
+    return Object.values(state.users);
   },
   getUserById: (state: UsersState) => (idUser: number): User | null => {
-    return null;
+    if (state.users.hasOwnProperty(idUser)) {
+      return state.users[idUser];
+    } else {
+      return null;
+    }
   },
   userIsConnected: (state: UsersState) => (idUser: number): boolean => {
-    return false;
+    return state.connectedUsers.indexOf(idUser) > -1;
   },
 };
