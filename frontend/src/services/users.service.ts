@@ -1,20 +1,21 @@
 import {User} from '@/classes/user';
 import {AxiosResponse} from 'axios';
+import {HttpClient} from '@/services/http-client.service';
 
 class UsersService {
 
   private readonly baseEndPoint: string = '/users';
 
-  // @ts-ignore
   public getUsers(): Promise<AxiosResponse<User[]>> {
+    return HttpClient.get<User[]>(this.baseEndPoint);
   }
 
-  // @ts-ignore
   public updateUser(user: User): Promise<AxiosResponse<User>> {
+    return HttpClient.put<User>(this.baseEndPoint, user);
   }
 
-  // @ts-ignore
   public deleteUser(user: User): Promise<AxiosResponse<User>> {
+    return HttpClient.delete<User>(this.baseEndPoint + `/${user.id}`);
   }
 
 }
