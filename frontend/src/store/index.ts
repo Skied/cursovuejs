@@ -23,7 +23,13 @@ export default new Vuex.Store<RootState>({
       state.user = user;
     },
   },
-  actions: {},
+  actions: {
+    getAllData: ({dispatch}) => {
+      dispatch('usersModule/getUsers');
+      dispatch('roomsModule/getRooms');
+      dispatch('userMessagesModule/getNewMessages');
+    },
+  },
   modules: {
     roomsModule,
     userMessagesModule,
