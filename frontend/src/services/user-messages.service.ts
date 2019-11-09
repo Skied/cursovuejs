@@ -9,12 +9,12 @@ class UserMessagesService {
 
   private readonly baseEndPoint: string = '/user-messages';
 
-  // @ts-ignore
   public getUserMessages(idUser: number): Promise<AxiosResponse<UserMessage[]>> {
+    return HttpClient.get<UserMessage[]>(this.baseEndPoint + `/${idUser}`);
   }
 
-  // @ts-ignore
   public getNewMessages(): Promise<AxiosResponse<UserMessage[]>> {
+    return HttpClient.get<UserMessage[]>(this.baseEndPoint + `/news`);
   }
 
   public sendUserMessage(userMessage: UserMessage): void {
