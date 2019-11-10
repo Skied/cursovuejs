@@ -22,6 +22,11 @@ export default class ChatComponent extends Vue {
   @userMessagesModule.Action('getMessages') private getMessages!: (idFriend: number) => void;
   @usersModule.Getter('getUserById') getUserById!: (idUser: number) => User;
 
+  get friend(): User {
+    const id: number = parseInt(this.idFriend, 10);
+    return this.getUserById(id);
+  }
+
   get isSendMessageButtonDisabled(): boolean {
     return this.newUserMessage.text == null || this.newUserMessage.text === '';
   }

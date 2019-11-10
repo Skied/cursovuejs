@@ -22,6 +22,7 @@ import jwtDecode from 'jwt-decode';
 // Socket.io-client
 import VueSocketIOExt from 'vue-socket.io-extended';
 import $socket from './socket-instance';
+import {User} from '@/classes/user';
 // i18n
 
 // Vue-moment
@@ -51,6 +52,12 @@ new Vue({
   store,
   render: h => h(App),
   created: () => {
+    const token: string | null = localStorage.getItem('token');
+    if (token != null) {
+      const currentUser: User = jwtDecode(localStorage.getItem('token')!);
+      store.commit('setUser', currentUser);
+      store.dispatch('getAllData');
+    }
   },
   sockets: {
     connect() {

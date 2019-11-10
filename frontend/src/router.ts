@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import HomeComponent from '@/views/home/home.component.vue';
+import {User} from '@/classes/user';
+import store from './store';
+import {Room} from '@/classes/room';
 
 Vue.use(Router);
 
@@ -32,6 +35,15 @@ export default new Router({
           path: 'chat/:idFriend',
           name: 'chat',
           props: true,
+          beforeEnter: (to: any, from: any, next: any) => {
+            const userId: number = parseInt(to.params.userId);
+            const user: User = store.getters['usersModule/getUserById'](userId);
+            if (user == null) {
+              next('/users');
+            } else {
+              next();
+            }
+          },
           component: () => import('./views/chat/chat.component.vue'),
         },
         {
@@ -43,6 +55,15 @@ export default new Router({
           path: 'room/:idRoom',
           name: 'room',
           props: true,
+          beforeEnter: (to: any, from: any, next: any) => {
+            const roomId: number = parseInt(to.params.roomId);
+            const room: Room = store.getters['roomsModule/getRoomById'](roomId);
+            if (room == null) {
+              next('/rooms');
+            } else {
+              next();
+            }
+          },
           component: () => import('./views/room/room.component.vue'),
         },
       ],
