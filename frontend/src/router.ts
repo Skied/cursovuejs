@@ -13,27 +13,20 @@ export default new Router({
       name: 'home',
       component: HomeComponent,
       children: [
-        {
-          path: 'users',
-          name: 'users',
-          component: () => import('./views/users/users.component.vue'),
-        },
-        {
-          path: 'rooms',
-          name: 'rooms',
-          component: () => import('./views/rooms/rooms.component.vue'),
-        },
+        { path: '/users', name: 'users', component: () => import('./views/users/users.component.vue')}
       ],
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('./views/login/login.component.vue')
     },
     {
       path: '/register',
       name: 'register',
       component: () => import('./views/register/register.component.vue'),
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('./views/login/login.component.vue'),
+      children: [
+      ],
     },
     {
       path: '*',

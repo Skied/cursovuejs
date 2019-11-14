@@ -61,3 +61,12 @@ new Vue({
     },
   },
 }).$mount('#app');
+
+extend('lengthBetween', {
+  validate: (value, {min, max}) => {
+    const length = value && value.length;
+    return length >= min && length <= max;
+  },
+  params: ['min', 'max'],
+  message: 'The {_field_} length muste be between {min} and {max}'
+});

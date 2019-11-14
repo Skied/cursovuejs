@@ -1,7 +1,8 @@
-import {Component, Vue} from 'vue-property-decorator';
+import {Component, Vue, Ref} from 'vue-property-decorator';
 import {ValidationObserver} from 'vee-validate';
-import {User} from '@/classes/user';
-import {RoleEnum} from '@/enums/role.enum';
+import { User } from '../../classes/user';
+import { RoleEnum } from '@/enums/role.enum';
+import router from '@/router';
 
 @Component({
   components: {
@@ -9,69 +10,50 @@ import {RoleEnum} from '@/enums/role.enum';
   },
 })
 export default class UsersComponent extends Vue {
+  users: User[] = [
+    { id: 1, name: 'Test 1', email: 'test1@mail.com', username: 'test1', password: '', role: RoleEnum.User },
+    { id: 2, name: 'Test 2', email: 'test2@mail.com', username: 'test2', password: '', role: RoleEnum.User },
+    { id: 3, name: 'Test 3', email: 'test3@mail.com', username: 'test3', password: '', role: RoleEnum.User },
+  ];
 
-  public selectedUser: User = new User();
-  public users: User[] = [];
+  userSelected = new User();
 
-  created() {
-    const user1: User = new User();
-    user1.id = 1;
-    user1.name = 'User1';
-    user1.role = RoleEnum.User;
-    user1.email = 'user1@iti.es';
-    user1.username = 'user1';
-    this.users.push(user1);
-    const user2: User = new User();
-    user2.id = 2;
-    user2.name = 'User2';
-    user2.role = RoleEnum.User;
-    user2.email = 'user2@iti.es';
-    user2.username = 'user2';
-    this.users.push(user2);
+  @Ref('editModalUser') readonly modalEditar: any;
+  @Ref('deleteModalUser') readonly modalEliminar: any;
+
+  showEditModal(user: User) {
+    this.userSelected = JSON.parse(JSON.stringify(user));
+    this.modalEditar.show();
   }
 
-  public sendMessage(user: User): void {
-    this.$router.push(`/chat/${user.id}`);
+  public async updateUser() {
+    const index = this.users.findIndex(item => item.id === this.userSelected.id);
+    Vue.set(this.users, index, this.userSelected);
+    this.cerrarEditUser();
   }
 
-  public showEditUserModal(user: User): void {
-    this.selectedUser = Object.assign({}, user);
-    (this.$refs['editModalUser'] as any).show();
+  cerrarEditUser() {
+    this.userSelected = new User();
+    this.modalEditar.hide();
   }
 
-  public hideEditUserModal(): void {
-    (this.$refs['editModalUser'] as any).hide();
+  showDeleteModal(user: User) {
+    this.userSelected = JSON.parse(JSON.stringify(user));
+    this.modalEliminar.show();
   }
 
-  public editUser(): void {
-    const index: number = this.users.findIndex((tmpUser: User) => {
-      return tmpUser.id === this.selectedUser.id;
-    });
-    if (index > -1) {
-      Vue.set(this.users, index, this.selectedUser);
-    }
-    this.selectedUser = new User();
-    this.hideEditUserModal();
+  deleteUser() {
+    const index = this.users.findIndex(item => item.id === this.userSelected.id);
+    Vue.delete(this.users, index);
+    this.cerrarEliminarUser();
   }
 
-  public showDeleteUserModal(user: User): void {
-    this.selectedUser = Object.assign({}, user);
-    (this.$refs['deleteModalUser'] as any).show();
+  cerrarEliminarUser() {
+    this.userSelected = new User();
+    this.modalEliminar.hide();
   }
 
-  public hideDeleteUserModal(): void {
-    (this.$refs['deleteModalUser'] as any).hide();
+  iniciarChat(user: User) {
+    router.push({ path: `/chat/${user.id}`});
   }
-
-  public deleteUser(): void {
-    const index: number = this.users.findIndex((tmpUser: User) => {
-      return tmpUser.id === this.selectedUser.id;
-    });
-    if (index > -1) {
-      this.users.splice(index, 1);
-    }
-    this.selectedUser = new User();
-    this.hideDeleteUserModal();
-  }
-
 }

@@ -1,109 +1,124 @@
 <div class="register-component">
   <div class="container h-100 text-center">
     <div class="row h-100 justify-content-center align-items-center">
-      <form class="col-4">
-        <h1 class="h3 mb-3 font-weight-normal">Chat</h1>
-        <ValidationObserver @submit.prevent="submit()" ref="registerForm" tag="form" v-slot="{ invalid }">
-          <ValidationProvider :rules="{required: true}" name="Name" v-slot="{ errors }">
-            <div class="form-group">
-              <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">
-                    <font-awesome-icon icon="signature"></font-awesome-icon>
+      <ValidationObserver ref="observer" v-slot="{ invalid }" tag="form" @submit.prevent="submit">
+        <form>
+          <h1 class="h3 mb-3 font-weight-normal">Chat</h1>
+
+            <ValidationProvider rules="required" v-slot="{errors}" name="Name">
+              <div class="form-group">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <font-awesome-icon icon="signature"></font-awesome-icon>
+                    </div>
                   </div>
+                  <input placeholder="Name" class="form-control" type="text" v-model="name">
                 </div>
-                <input placeholder="Name" class="form-control" type="text" v-model="name">
+                <span class="text-danger">
+                  <li v-for="error in errors">{{error}}</li>
+                </span>
               </div>
-              <span class="text-danger" v-for="error in errors">
-                {{ error }}
-              </span>
-            </div>
-          </ValidationProvider>
-          <ValidationProvider :rules="{required: true, min: 3, max: 20}" name="Username" v-slot="{ errors }">
-            <div class="form-group">
-              <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">
-                    <font-awesome-icon icon="user"></font-awesome-icon>
+            </ValidationProvider>
+
+            <ValidationProvider rules="required" v-slot="{errors}" name="Username">
+              <div class="form-group">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <font-awesome-icon icon="user"></font-awesome-icon>
+                    </div>
                   </div>
+                  <input placeholder="Username" class="form-control" type="text" v-model="username">
                 </div>
-                <input placeholder="Username" class="form-control" type="text" v-model="username">
+                <span class="text-danger">
+                  <li v-for="error in errors">{{error}}</li>
+                </span>
               </div>
-              <span class="text-danger" v-for="error in errors">{{ error }}</span>
-            </div>
-          </ValidationProvider>
-          <ValidationProvider :rules="{required: true, email: true}" name="Email" v-slot="{ errors }">
-            <div class="form-group">
-              <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">
-                    <font-awesome-icon icon="envelope"></font-awesome-icon>
+            </ValidationProvider>
+
+
+            <ValidationProvider rules="required|email" v-slot="{errors}" name="Email">
+              <div class="form-group">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <font-awesome-icon icon="envelope"></font-awesome-icon>
+                    </div>
                   </div>
+                  <input placeholder="Email" class="form-control" type="email" v-model="email">
                 </div>
-                <input placeholder="Email" class="form-control" type="email" v-model="email">
+                <span class="text-danger">
+                  <li v-for="error in errors">{{error}}</li>
+                </span>
               </div>
-              <span class="text-danger" v-for="error in errors">
-                {{ error }}
-              </span>
-            </div>
-          </ValidationProvider>
-          <ValidationProvider :rules="{required: true, min: 8}" name="Password" v-slot="{ errors }">
-            <div class="form-group">
-              <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">
-                    <font-awesome-icon icon="key"></font-awesome-icon>
+            </ValidationProvider>
+
+
+            <ValidationProvider rules="required|min:8" v-slot="{errors}" name="Password">
+              <div class="form-group">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <font-awesome-icon icon="key"></font-awesome-icon>
+                    </div>
                   </div>
+                  <input placeholder="Password" class="form-control" data-vv-name="password" type="password" v-model="password">
                 </div>
-                <input placeholder="Password" class="form-control" data-vv-name="password" type="password"
-                       v-model="password">
+                <span class="text-danger">
+                  <li v-for="error in errors">{{error}}</li>
+                </span>
               </div>
-              <span class="text-danger" v-for="error in errors">{{ error }}</span>
-            </div>
-          </ValidationProvider>
-          <ValidationProvider :rules="{required: true, confirmed: 'Password'}" name="Repeat password"
-                              v-slot="{ errors }">
-            <div class="form-group">
-              <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">
-                    <font-awesome-icon icon="key"></font-awesome-icon>
+            </ValidationProvider>
+
+
+            <ValidationProvider :rules="{ required: true, min: 8, is: password }" v-slot="{errors}" name="Repeat password">
+              <div class="form-group">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <font-awesome-icon icon="key"></font-awesome-icon>
+                    </div>
                   </div>
+                  <input placeholder="Repeat password" class="form-control" type="password" v-model="repeatPassword">
                 </div>
-                <input placeholder="Repeat password" class="form-control" type="password" v-model="repeatPassword">
+                <span class="text-danger">
+                  <li v-for="error in errors">{{error}}</li>
+                </span>
               </div>
-              <span class="text-danger" v-for="error in errors">
-                {{ error }}
-              </span>
+            </ValidationProvider>
+
+
+            <ValidationProvider rules="required" v-slot="{errors}" name="Accept Terms">
+              <div class="form-group">
+                <div class="checkbox mb-3">
+                  <label>
+                    <input type="checkbox" v-model="acceptTerms" /> Accept terms and conditions
+                  </label>
+                </div>
+                <span class="text-danger">
+                  <li v-for="error in errors">{{error}}</li>
+                </span>
+              </div>
+            </ValidationProvider>
+
+
+            <button class="btn btn-primary btn-block" :disabled="invalid">
+              Register
+            </button>
+            <div class="mt-2 mb-2">
+              <small>
+                Do you already have an account?
+              </small>
             </div>
-          </ValidationProvider>
-          <ValidationProvider :rules="{required: { allowFalse: false }}" name="Accept terms" v-slot="{ errors }">
-            <div class="form-group">
-              <div class="checkbox mb-3">
-                <label>
-                  <input type="checkbox" v-model="acceptTerms"> Accept terms and conditions
-                </label>
+            <div class="mt-2 mb-4">
+              <div>
+                <router-link to="/login">Login</router-link>
               </div>
             </div>
-          </ValidationProvider>
-          <button :disabled="invalid" class="btn btn-primary btn-block">
-            Register
-          </button>
-          <div class="mt-2 mb-2">
-            <small>
-              Do you already have an account?
-            </small>
-          </div>
-          <div class="mt-2 mb-4">
-            <div>
-              <router-link to="/login">
-                Login
-              </router-link>
-            </div>
-          </div>
-          <p class="mt-2 mb-2 text-muted">© 2019-2020</p>
-        </ValidationObserver>
-      </form>
+            <p class="mt-2 mb-2 text-muted">© 2019-2020</p>
+        </form>
+      </ValidationObserver>
     </div>
   </div>
 </div>

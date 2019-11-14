@@ -16,14 +16,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-if="users.length === 0">
-          <td class="text-center" colspan="6">
+        <tr v-if="!users || users.length === 0">
+          <td class="text-center">
             No users available
           </td>
         </tr>
-        <tr v-else v-for="user in users">
+        <tr v-if="users && users.length > 0" v-for="user in users">
           <td class="text-left">
-            {{ user.id }}
+            {{user.id}}
           </td>
           <td class="text-left">
             <span class="badge badge-success">
@@ -34,22 +34,22 @@
             </span>
           </td>
           <td class="text-left">
-            {{ user.name }}
+            {{user.name}}
           </td>
           <td class="text-left">
-            {{ user.username }}
+            {{user.username}}
           </td>
           <td class="text-left">
-            {{ user.email }}
+            {{user.email}}
           </td>
           <td class="text-right">
-            <button title="Send message" @click="sendMessage(user)" class="btn btn-sm btn-success">
+            <button title="Send message" class="btn btn-sm btn-success" @click="iniciarChat(user)">
               <font-awesome-icon icon="comment"></font-awesome-icon>
             </button>
-            <button title="Edit user" @click="showEditUserModal(user)" class="btn btn-sm btn-info">
+            <button title="Edit user" class="btn btn-sm btn-info" @click="showEditModal(user)">
               <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
             </button>
-            <button title="Delete user" @click="showDeleteUserModal(user)" class="btn btn-sm btn-danger">
+            <button title="Delete user" class="btn btn-sm btn-danger" @click="showDeleteModal(user)">
               <font-awesome-icon icon="trash"></font-awesome-icon>
             </button>
           </td>
@@ -61,8 +61,8 @@
 
   <b-modal title="Edit user" hide-footer ref="editModalUser">
     <div class="d-block text-center">
-      <ValidationObserver @submit.prevent="submit()" ref="editUserForm" tag="form" v-slot="{ invalid }">
-        <ValidationProvider :rules="{required: true}" name="Name" v-slot="{ errors }">
+      <ValidationObserver ref="observer" v-slot="{ invalid }" tag="form" @submit.prevent="updateUser">
+        <ValidationProvider rules="required" v-slot="{errors}" name="Name">
           <div class="form-group">
             <div class="input-group mb-2">
               <div class="input-group-prepend">
@@ -70,18 +70,18 @@
                   <font-awesome-icon icon="signature"></font-awesome-icon>
                 </div>
               </div>
-              <input placeholder="Name" class="form-control" type="text" v-model="selectedUser.name">
+              <input placeholder="Name" class="form-control" type="text" v-model="userSelected.name">
             </div>
-            <span class="text-danger" v-for="error in errors">
-              {{ error }}
+            <span class="text-danger">
+              <li v-for="error in errors">{{error}}</li>
             </span>
           </div>
         </ValidationProvider>
         <div class="float-right">
-          <b-button @click="hideEditUserModal()" class="mt-3 mr-1" variant="secondary">
+          <b-button class="mt-3 mr-1" variant="secondary" @click="cerrarEditUser()">
             Cancel
           </b-button>
-          <b-button :disabled="invalid" @click="editUser()" class="mt-3 ml-1" variant="success">
+          <b-button class="mt-3 ml-1" variant="success" :disabled="invalid" type="submit" >
             Update
           </b-button>
         </div>
@@ -94,10 +94,10 @@
       <p>Are you sure you want delete user?</p>
     </div>
     <div class="float-right">
-      <b-button @click="hideDeleteUserModal()" class="mt-3 mr-1" variant="secondary">
+      <b-button class="mt-3 mr-1" variant="secondary" @click="cerrarEliminarUser()">
         Cancel
       </b-button>
-      <b-button @click="deleteUser()" class="mt-3 ml-1" variant="danger">
+      <b-button class="mt-3 ml-1" variant="danger" @click="deleteUser()">
         Delete
       </b-button>
     </div>
