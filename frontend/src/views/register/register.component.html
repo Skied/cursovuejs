@@ -3,6 +3,7 @@
     <div class="row h-100 justify-content-center align-items-center">
       <form class="col-4">
         <h1 class="h3 mb-3 font-weight-normal">Chat</h1>
+        <div class="alert alert-danger" v-if="errorText">{{errorText}}</div>
         <ValidationObserver @submit.prevent="submit()" ref="registerForm" tag="form" v-slot="{ invalid }">
           <ValidationProvider :rules="{required: true}" name="Name" v-slot="{ errors }">
             <div class="form-group">
@@ -12,7 +13,7 @@
                     <font-awesome-icon icon="signature"></font-awesome-icon>
                   </div>
                 </div>
-                <input placeholder="Name" class="form-control" type="text" v-model="name">
+                <input placeholder="Name" class="form-control" type="text" v-model="user.name">
               </div>
               <span class="text-danger" v-for="error in errors">
                 {{ error }}
@@ -27,7 +28,7 @@
                     <font-awesome-icon icon="user"></font-awesome-icon>
                   </div>
                 </div>
-                <input placeholder="Username" class="form-control" type="text" v-model="username">
+                <input placeholder="Username" class="form-control" type="text" v-model="user.username">
               </div>
               <span class="text-danger" v-for="error in errors">{{ error }}</span>
             </div>
@@ -40,7 +41,7 @@
                     <font-awesome-icon icon="envelope"></font-awesome-icon>
                   </div>
                 </div>
-                <input placeholder="Email" class="form-control" type="email" v-model="email">
+                <input placeholder="Email" class="form-control" type="email" v-model="user.email">
               </div>
               <span class="text-danger" v-for="error in errors">
                 {{ error }}
@@ -56,7 +57,7 @@
                   </div>
                 </div>
                 <input placeholder="Password" class="form-control" data-vv-name="password" type="password"
-                       v-model="password">
+                       v-model="user.password">
               </div>
               <span class="text-danger" v-for="error in errors">{{ error }}</span>
             </div>
@@ -104,6 +105,7 @@
           <p class="mt-2 mb-2 text-muted">© 2019-2020</p>
         </ValidationObserver>
       </form>
+
     </div>
   </div>
 </div>

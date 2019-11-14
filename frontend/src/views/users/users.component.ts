@@ -2,6 +2,8 @@ import {Component, Vue} from 'vue-property-decorator';
 import {ValidationObserver} from 'vee-validate';
 import {User} from '@/classes/user';
 import {RoleEnum} from '@/enums/role.enum';
+import { userMessagesService } from '../../services/user-messages.service';
+import { usersService } from '../../services/users.service';
 
 @Component({
   components: {
@@ -14,20 +16,8 @@ export default class UsersComponent extends Vue {
   public users: User[] = [];
 
   created() {
-    const user1: User = new User();
-    user1.id = 1;
-    user1.name = 'User1';
-    user1.role = RoleEnum.User;
-    user1.email = 'user1@iti.es';
-    user1.username = 'user1';
-    this.users.push(user1);
-    const user2: User = new User();
-    user2.id = 2;
-    user2.name = 'User2';
-    user2.role = RoleEnum.User;
-    user2.email = 'user2@iti.es';
-    user2.username = 'user2';
-    this.users.push(user2);
+    usersService.getUsers().then(res => this.users = res);
+
   }
 
   public sendMessage(user: User): void {
@@ -48,7 +38,8 @@ export default class UsersComponent extends Vue {
       return tmpUser.id === this.selectedUser.id;
     });
     if (index > -1) {
-      Vue.set(this.users, index, this.selectedUser);
+      usersService.updateUser(this.selectedUser).then(
+        res => Vue.set(this.users, index, res));
     }
     this.selectedUser = new User();
     this.hideEditUserModal();
@@ -68,7 +59,7 @@ export default class UsersComponent extends Vue {
       return tmpUser.id === this.selectedUser.id;
     });
     if (index > -1) {
-      this.users.splice(index, 1);
+      usersService.deleteUser(this.selectedUser).then(() =>this.users.splice(index, 1));
     }
     this.selectedUser = new User();
     this.hideDeleteUserModal();

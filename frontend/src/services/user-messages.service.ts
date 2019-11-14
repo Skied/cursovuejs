@@ -11,10 +11,12 @@ class UserMessagesService {
 
   // @ts-ignore
   public getUserMessages(idUser: number): Promise<AxiosResponse<UserMessage[]>> {
+    return HttpClient.get(this.baseEndPoint + '/' + idUser);
   }
 
   // @ts-ignore
   public getNewMessages(): Promise<AxiosResponse<UserMessage[]>> {
+    return HttpClient.get(this.baseEndPoint + '/news');
   }
 
   public sendUserMessage(userMessage: UserMessage): void {

@@ -14,7 +14,7 @@
             <template v-slot:button-content>
               Username
             </template>
-            <b-dropdown-item>
+            <b-dropdown-item @click="logout()">
               Logout
             </b-dropdown-item>
           </b-nav-item-dropdown>
@@ -26,10 +26,14 @@
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
+  import { authService } from '../../../services/auth.service';
 
   @Component
   export default class HeaderComponent extends Vue {
 
+    logout() {
+      authService.logout();
+    }
   }
 </script>
 

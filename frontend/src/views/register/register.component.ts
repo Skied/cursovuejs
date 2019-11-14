@@ -1,5 +1,8 @@
 import {Component, Vue} from 'vue-property-decorator';
 import {ValidationObserver} from 'vee-validate';
+import { authService } from '../../services/auth.service';
+import { User } from '@/classes/user';
+import router from '@/router';
 
 @Component({
   components: {
@@ -8,15 +11,20 @@ import {ValidationObserver} from 'vee-validate';
 })
 export default class RegisterComponent extends Vue {
 
-  public name: string = '';
-  public email: string = '';
-  public username: string = '';
-  public password: string = '';
+  public user = new User(); 
   public repeatPassword: string = '';
   public acceptTerms: boolean = false;
 
+  public errorText: string = '';
+
   public async submit() {
-
+    authService.register(this.user).then(
+      () => router.push('login')
+    ).catch(err => {
+      this.user = new User();
+      this.repeatPassword = '';
+      this.acceptTerms = false;
+      this.errorText = err.data.message;
+    });
   }
-
 }
