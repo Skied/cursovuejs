@@ -5,12 +5,12 @@ import {User} from '@/classes/user';
 
 export const getters: GetterTree<UsersState, RootState> = {
   getUsers: (state: UsersState): User[] => {
-    return [];
+    return Object.values(state.users);
   },
   getUserById: (state: UsersState) => (idUser: number): User | null => {
-    return null;
+    return state.users[idUser];
   },
   userIsConnected: (state: UsersState) => (idUser: number): boolean => {
-    return false;
-  },
+    return state.connectedUsers.includes(idUser);
+  }
 };

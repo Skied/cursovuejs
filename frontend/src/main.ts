@@ -2,6 +2,8 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import jwt_decode from 'jwt-decode';
+import { User } from '@/classes/user';
 // BootstrapVue
 import BootstrapVue from 'bootstrap-vue';
 // Fontawesome
@@ -49,8 +51,14 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
-  render: h => h(App),
+  render: (h: any) => h(App),
   created: () => {
+    const token: string | null = localStorage.getItem('token');
+    if (token && token !== '') {
+      const user: User = jwt_decode(localStorage.getItem('token')!);
+      store.setUser(user);
+      store.getAllData();
+    }
   },
   sockets: {
     connect() {
