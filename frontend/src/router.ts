@@ -36,8 +36,8 @@ export default new Router({
           name: 'chat',
           props: true,
           beforeEnter: (to: any, from: any, next: any) => {
-            const userId: number = parseInt(to.params.userId);
-            const user: User = store.getters['usersModule/getUserById'](userId);
+            const idFriend: number = parseInt(to.params.idFriend);
+            const user: User = store.getters['usersModule/getUserById'](idFriend);
             if (user == null) {
               next('/users');
             } else {

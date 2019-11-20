@@ -32,7 +32,6 @@ export default class ChatComponent extends Vue {
   }
 
   created() {
-    this.currentUser = jwt_decode(localStorage.getItem('token')!);
     const id: number = parseInt(this.idFriend, 10);
     this.getMessages(id);
   }

@@ -10,10 +10,12 @@
       <ul class="user-list">
         <template v-for="(messages, idUser) in newMessages">
           <li v-if="showUserMessages(idUser, messages)">
-            {{ getUserById(idUser) != null ? getUserById(idUser).name : '' }}
-            <span class="badge badge-pill badge-primary fa-pull-right">
-              {{ messages.length }}
-            </span>
+            <router-link :to="'chat/' + idUser" class="text-primary">
+              {{ getUserById(idUser) != null ? getUserById(idUser).name : '' }}
+              <span class="badge badge-pill badge-primary fa-pull-right">
+                {{ messages.length }}
+              </span>
+            </router-link>
           </li>
         </template>
       </ul>
