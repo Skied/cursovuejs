@@ -56,8 +56,8 @@ export default new Router({
           name: 'room',
           props: true,
           beforeEnter: (to: any, from: any, next: any) => {
-            const roomId: number = parseInt(to.params.roomId);
-            const room: Room = store.getters['roomsModule/getRoomById'](roomId);
+            const idRoom: number = parseInt(to.params.idRoom);
+            const room: Room = store.getters['roomsModule/getRoomById'](idRoom);
             if (room == null) {
               next('/rooms');
             } else {
