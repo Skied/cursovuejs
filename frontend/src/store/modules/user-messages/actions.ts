@@ -6,20 +6,20 @@ import {UserMessage} from '@/classes/user-message';
 import {AxiosResponse} from 'axios';
 
 export const actions: ActionTree<UserMessagesState, RootState> = {
-  getMessages({commit}, idFriend: number): void {
+  getMessages(context: any, idFriend: number): void {
     userMessagesService.getUserMessages(idFriend).then((axiosResponse: AxiosResponse<UserMessage[]>) => {
       if (axiosResponse.status === 200) {
-        commit('setMessages', axiosResponse.data);
+        context.commit('setMessages', axiosResponse.data);
       }
     });
   },
-  getNewMessages({commit}): void {
+  getNewMessages(context: any): void {
     userMessagesService.getNewMessages().then((axiosResponse: AxiosResponse<UserMessage[]>) => {
       if (axiosResponse.status === 200) {
-        commit('setNewMessages', axiosResponse.data);
+        context.commit('setNewMessages', axiosResponse.data);
       }
     }).catch((error: AxiosResponse) => {
-      commit('newMessagesError');
+      context.commit('newMessagesError');
     });
   },
 };
