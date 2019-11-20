@@ -6,27 +6,27 @@ import {usersService} from '@/services/users.service';
 import {AxiosError, AxiosResponse} from 'axios';
 
 export const actions: ActionTree<UsersState, RootState> = {
-  getUsers({commit}): Promise<User[]> {
+  getUsers(context: any): Promise<User[]> {
     return new Promise<User[]>((resolve) => {
       usersService.getUsers().then((response: AxiosResponse<User[]>) => {
         if (response.status == 200) {
           const users: User[] = response.data;
-          commit('usersLoaded', users);
+          context.commit('usersLoaded', users);
           resolve(users);
         } else {
           resolve([]);
         }
       }).catch((error: AxiosError) => {
-        commit('usersError');
+        context.commit('usersError');
       });
     });
   },
-  updateUser({commit}, user: User): Promise<User | null> {
+  updateUser(context: any, user: User): Promise<User | null> {
     return new Promise<User | null>((resolve) => {
       usersService.updateUser(user).then((response: AxiosResponse<User>) => {
         if (response.status == 200) {
           const userResponse: User = response.data;
-          commit('updateUser', userResponse);
+          context.commit('updateUser', userResponse);
           resolve(userResponse);
         } else {
           resolve(null);
@@ -34,12 +34,12 @@ export const actions: ActionTree<UsersState, RootState> = {
       });
     });
   },
-  deleteUser({commit}, user: User): Promise<User | null> {
+  deleteUser(context: any, user: User): Promise<User | null> {
     return new Promise<User | null>((resolve) => {
       usersService.deleteUser(user).then((response: AxiosResponse<User>) => {
         if (response.status == 200) {
           const userResponse: User = response.data;
-          commit('deleteUser', user);
+          context.commit('deleteUser', user);
           resolve(userResponse);
         } else {
           resolve(null);
