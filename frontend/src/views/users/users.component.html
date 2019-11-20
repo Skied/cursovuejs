@@ -52,7 +52,7 @@
               <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
             </button>
             <button title="Delete user" @click="showDeleteUserModal(user)" class="btn btn-sm btn-danger"
-                    v-if="userIsAdmin">
+                    v-if="userIsAdmin && !itsMe(user)">
               <font-awesome-icon icon="trash"></font-awesome-icon>
             </button>
           </td>
