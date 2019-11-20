@@ -24,10 +24,10 @@ export default new Vuex.Store<RootState>({
     },
   },
   actions: {
-    getAllData: ({dispatch}) => {
-      dispatch('usersModule/getUsers');
-      dispatch('roomsModule/getRooms');
-      dispatch('userMessagesModule/getNewMessages');
+    getAllData: (context: any) => {
+      context.dispatch('usersModule/getUsers');
+      context.dispatch('roomsModule/getRooms');
+      context.dispatch('userMessagesModule/getNewMessages');
     },
   },
   modules: {
