@@ -17,9 +17,8 @@ export const mutations: MutationTree<UsersState> = {
   },
   updateUser(state: UsersState, user: User) {
     if (state.users.hasOwnProperty(user.id!)) {
-      Vue.delete(state.users, user.id!);
+      Vue.set(state.users, user.id!, user);
     }
-    Vue.set(state.users, user.id!, user);
   },
   deleteUser(state: UsersState, user: User) {
     if (state.users.hasOwnProperty(user.id!)) {
