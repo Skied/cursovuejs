@@ -24,7 +24,6 @@ export const mutations: MutationTree<UsersState> = {
     if (state.users.hasOwnProperty(user.id!)) {
       Vue.delete(state.users, user.id!);
     }
-    Vue.set(state.users, user.id!, user);
   },
   [ChatEnums.SOCKET_USER_CONNECTED](state: UsersState, user: User) {
   },
