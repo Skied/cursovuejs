@@ -3,8 +3,8 @@
     <h5 v-if="friend != null">
       {{ friend.name }}
     </h5>
-    <small>
-
+    <small v-if="userIsTyping">
+      Escribiendo...
     </small>
     <small>
 

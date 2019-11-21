@@ -23,6 +23,7 @@ import jwtDecode from 'jwt-decode';
 import VueSocketIOExt from 'vue-socket.io-extended';
 import $socket from './socket-instance';
 import {User} from '@/classes/user';
+import { authService } from './services/auth.service';
 // i18n
 
 // Vue-moment
@@ -57,6 +58,7 @@ new Vue({
       const currentUser: User = jwtDecode(localStorage.getItem('token')!);
       store.commit('setUser', currentUser);
       store.dispatch('getAllData');
+      authService.associate();
     }
   },
   sockets: {

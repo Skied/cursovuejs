@@ -16,7 +16,7 @@ export default new Vuex.Store<RootState>({
   getters: {
     userIsAdmin: (state: RootState): boolean => {
       return state.user != null && state.user.role === RoleEnum.Admin;
-    },
+    }
   },
   mutations: {
     setUser(state: RootState, user: User) {

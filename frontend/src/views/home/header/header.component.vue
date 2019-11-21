@@ -14,7 +14,7 @@
             <template v-if="currentUser != null" v-slot:button-content>
               {{ currentUser.name }}
             </template>
-            <b-dropdown-item>
+            <b-dropdown-item @click="logOut()">
               Logout
             </b-dropdown-item>
           </b-nav-item-dropdown>
@@ -28,11 +28,16 @@
   import {Component, Vue} from "vue-property-decorator";
   import {User} from "@/classes/user";
   import {State} from "vuex-class";
+import { authService } from "../../../services/auth.service";
 
   @Component
   export default class HeaderComponent extends Vue {
 
     @State("user") currentUser!: User;
+
+    logOut() {
+      authService.logout();
+    }
 
   }
 </script>

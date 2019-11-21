@@ -28,6 +28,7 @@ export default class LoginComponent extends Vue {
         const currentUser: User = jwt_decode(localStorage.getItem('token')!);
         this.setUser(currentUser);
         this.getAllData();
+        authService.associate();
         this.$router.push('/');
       } else {
         const errorResponseDto: ErrorResponseDto = response.data as ErrorResponseDto;

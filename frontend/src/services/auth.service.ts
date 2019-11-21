@@ -4,6 +4,9 @@ import {AccessTokenDto} from '@/dtos/access-token.dto';
 import {User} from '@/classes/user';
 import router from '@/router';
 import {HttpClient} from '@/services/http-client.service';
+import socket from '@/socket-instance';
+import { ChatEnums } from '@/enums/chat.enums';
+import store from '@/store';
 
 class AuthService {
 
@@ -18,6 +21,9 @@ class AuthService {
   }
 
   public associate(): void {
+    const userLogged = store.state.user;
+    const data = {idUser: userLogged ? userLogged.id : 0};
+    socket.emit(ChatEnums.ASSOCIATE, data);
   }
 
   public logout(): void {

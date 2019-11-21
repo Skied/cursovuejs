@@ -4,6 +4,10 @@ import {userMessagesService} from '@/services/user-messages.service';
 import {User} from '@/classes/user';
 import jwt_decode from 'jwt-decode';
 import {namespace, State} from 'vuex-class';
+import { EventBus } from '../../services/event-bus';
+import { Socket } from 'vue-socket.io-extended';
+import { ChatEnums } from '@/enums/chat.enums';
+
 
 const usersModule = namespace('usersModule');
 const userMessagesModule = namespace('userMessagesModule');
@@ -40,26 +44,44 @@ export default class ChatComponent extends Vue {
     // El usuario está escribiendo...
     this.inputText.onkeyup = (e: KeyboardEvent) => {
       if (e.keyCode === 13) {
-        // Usuario pulsa 'enter'
-
+        this.sendMessage();
       } else if (this.newUserMessage.text != null && this.newUserMessage.text !== '') {
         // El texto del mensaje es válido
+        userMessagesService.userTyping({idReceiver: this.friend.id, idSender: this.currentUser.id, typing: true});
 
         if (this.typingTimeout !== -1) {
           clearTimeout(this.typingTimeout);
         }
         this.typingTimeout = setTimeout(() => {
           // El usuario ya no está escribiendo
-
+          this.userIsTyping = false;
+          userMessagesService.userTyping({idReceiver: this.friend.id, idSender: this.currentUser.id, typing: false});
         }, 500);
       } else {
         // El usuario ya no está escribiendo
-
-
+        this.userIsTyping = false;
+        userMessagesService.userTyping({idReceiver: this.friend.id, idSender: this.currentUser.id, typing: false});
       }
     };
 
+    EventBus.$on('messagesLoaded', () => {
+      this.messages.forEach(message => {
+        if (!message.markedAsRead) {
+          userMessagesService.userReadMessage({idMessage: message.id!});
+        }
+      });
+      this.scrollBottomMessageList();
+    });
 
+    EventBus.$on('newUserMessage', (message: UserMessage) => {
+      this.scrollBottomMessageList();
+      userMessagesService.userReadMessage({idMessage: message.id!});
+    });
+  }
+
+  @Socket(ChatEnums.USER_IS_TYPING)
+  private handleUserIsTyping() {
+    this.userIsTyping = true;
   }
 
   public sendMessage(): void {
